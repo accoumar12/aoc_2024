@@ -6,7 +6,9 @@ pub fn part_one(input: &str) -> Option<u64> {
     let (mut left, mut right): (Vec<u64>, Vec<u64>) = input
         .lines()
         .filter_map(|line| {
-            let mut nums = line.split_whitespace().filter_map(|n| n.parse::<u64>().ok());
+            let mut nums = line
+                .split_whitespace()
+                .filter_map(|n| n.parse::<u64>().ok());
             Some((nums.next()?, nums.next()?))
         })
         .unzip();
@@ -27,7 +29,9 @@ pub fn part_two(input: &str) -> Option<u64> {
     let (left, right): (Vec<u64>, Vec<u64>) = input
         .lines()
         .filter_map(|line| {
-            let mut nums = line.split_whitespace().filter_map(|n| n.parse::<u64>().ok());
+            let mut nums = line
+                .split_whitespace()
+                .filter_map(|n| n.parse::<u64>().ok());
             Some((nums.next()?, nums.next()?))
         })
         .unzip();
@@ -44,7 +48,6 @@ pub fn part_two(input: &str) -> Option<u64> {
 
     Some(similarity_score)
 }
-
 
 #[cfg(test)]
 mod tests {
