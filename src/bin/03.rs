@@ -2,33 +2,33 @@ advent_of_code::solution!(3);
 
 pub fn part_one(input: &str) -> Option<u64> {
     use regex::Regex;
-    
+
     // Pattern to match mul(X,Y) where X and Y are 1-3 digit numbers
     let re = Regex::new(r"mul\((\d{1,3}),(\d{1,3})\)").ok()?;
-    
+
     let mut sum = 0u64;
-    
+
     for cap in re.captures_iter(input) {
         let x: u64 = cap[1].parse().ok()?;
         let y: u64 = cap[2].parse().ok()?;
         sum += x * y;
     }
-    
+
     Some(sum)
 }
 
 pub fn part_two(input: &str) -> Option<u64> {
     use regex::Regex;
-    
+
     // Pattern to match mul(X,Y), do(), or don't()
     let re = Regex::new(r"(mul\((\d{1,3}),(\d{1,3})\)|do\(\)|don't\(\))").ok()?;
-    
+
     let mut sum = 0u64;
     let mut enabled = true; // mul instructions start enabled
-    
+
     for cap in re.captures_iter(input) {
         let full_match = &cap[1];
-        
+
         match full_match {
             "do()" => enabled = true,
             "don't()" => enabled = false,
@@ -41,7 +41,7 @@ pub fn part_two(input: &str) -> Option<u64> {
             _ => {} // mul instruction but disabled, or something else
         }
     }
-    
+
     Some(sum)
 }
 
