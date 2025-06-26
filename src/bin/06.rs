@@ -51,18 +51,20 @@ pub fn part_one(input: &str) -> Option<u64> {
     let mut visited: HashSet<(usize, usize)> = HashSet::new();
     visited.insert(current_pos);
 
-    while true {
+    loop {
         let potential_next = state.step(current_pos);
-        if potential_next.0 >= grid.len() || potential_next.1 >= grid[0].len() {
-            break
-        }
-        else if grid[potential_next.0][potential_next.1] == '#' {
-            state = state.next();
-            continue;
-        }
-        else {
-            current_pos = potential_next;
-            visited.insert(current_pos);
+        
+        match (
+            potential_next.0 < grid.len() && potential_next.1 < grid[0].len(),
+            grid.get(potential_next.0).and_then(|row| row.get(potential_next.1))
+        ) {
+            (false, _) => break, // Out of bounds
+            (true, Some('#')) => state = state.next(), // Hit obstacle
+            (true, Some(_)) => {
+                current_pos = potential_next;
+                visited.insert(current_pos);
+            }
+            _ => unreachable!(),
         }
     }
 
