@@ -1,3 +1,5 @@
+use std::collections;
+
 advent_of_code::solution!(8);
 
 pub fn part_one(input: &str) -> Option<u64> {
@@ -5,6 +7,8 @@ pub fn part_one(input: &str) -> Option<u64> {
         position: (usize, usize),
         frequency: char,
     }
+    let count_of_rows = input.lines().filter(|l| !l.trim().is_empty()).count();
+    let count_of_columns = input.lines().next()?.len();
 
     let mut frequency_to_antennas: std::collections::HashMap<char, Vec<Antenna>> = std::collections::HashMap::new();
     for (row_idx, line) in input.lines().filter(|l| !l.trim().is_empty()).enumerate() {
@@ -19,9 +23,35 @@ pub fn part_one(input: &str) -> Option<u64> {
             frequency_to_antennas.entry(char).or_default().push(antenna);
         }
     }
+    let mut antinodes_positions: std::collections::HashSet<(usize, usize)> = std::collections::HashSet::new();
 
-
-    None
+    for (antenna_frequency, antennas) in frequency_to_antennas.iter() {
+        for i in 0..antennas.len() {
+            for j in i + 1..antennas.len() {
+                let x_offset = antennas[j].position.0 as isize - antennas[i].position.0 as isize;
+                let y_offset = antennas[j].position.1 as isize - antennas[i].position.1 as isize;
+                
+                // Antinode on the side of antenna j
+                let antinode1_x = antennas[j].position.0 as isize + x_offset;
+                let antinode1_y = antennas[j].position.1 as isize + y_offset;
+                
+                if antinode1_x >= 0 && antinode1_x < count_of_rows as isize && 
+                   antinode1_y >= 0 && antinode1_y < count_of_columns as isize {
+                    antinodes_positions.insert((antinode1_x as usize, antinode1_y as usize));
+                }
+                
+                // Antinode on the side of antenna i
+                let antinode2_x = antennas[i].position.0 as isize - x_offset;
+                let antinode2_y = antennas[i].position.1 as isize - y_offset;
+                
+                if antinode2_x >= 0 && antinode2_x < count_of_rows as isize && 
+                   antinode2_y >= 0 && antinode2_y < count_of_columns as isize {
+                    antinodes_positions.insert((antinode2_x as usize, antinode2_y as usize));
+                }
+            }
+        }
+    }
+    Some(antinodes_positions.len() as u64)
 }
 
 pub fn part_two(input: &str) -> Option<u64> {
