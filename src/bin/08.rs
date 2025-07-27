@@ -1,11 +1,8 @@
-use std::collections;
-
 advent_of_code::solution!(8);
 
 pub fn part_one(input: &str) -> Option<u64> {
     struct Antenna {
         position: (usize, usize),
-        frequency: char,
     }
     let count_of_rows = input.lines().filter(|l| !l.trim().is_empty()).count();
     let count_of_columns = input.lines().next()?.len();
@@ -18,14 +15,13 @@ pub fn part_one(input: &str) -> Option<u64> {
             }
             let antenna = Antenna {
                 position: (row_idx, col_idx),
-                frequency: char,
             };
             frequency_to_antennas.entry(char).or_default().push(antenna);
         }
     }
     let mut antinodes_positions: std::collections::HashSet<(usize, usize)> = std::collections::HashSet::new();
 
-    for (antenna_frequency, antennas) in frequency_to_antennas.iter() {
+    for (_, antennas) in frequency_to_antennas.iter() {
         for i in 0..antennas.len() {
             for j in i + 1..antennas.len() {
                 let x_offset = antennas[j].position.0 as isize - antennas[i].position.0 as isize;
